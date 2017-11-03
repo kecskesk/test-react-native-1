@@ -42,7 +42,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
     },
-    itemNameInput: {
+    label: {
+        padding: 5,
+        flex: 2
+    },
+    textInput: {
         width: width,
         flex: 5,
         height: 40,
@@ -50,6 +54,11 @@ const styles = StyleSheet.create({
     },
     actionButton: {
         margin: 1
+    },
+    error: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontStyle: 'italic',
     }
 });
 

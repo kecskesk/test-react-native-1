@@ -37,7 +37,8 @@ export default class App extends React.Component {
                 </View>
 
                 <View style={[styles.content]}>
-                    {this.state.view === PROFILE_VIEW ? <Profile /> :
+                    {this.state.view === PROFILE_VIEW ?
+                        <Profile /> :
                         <GroceryList firebaseRef={this.itemsRef} />}
                 </View>
             </KeyboardAvoidingView>
