@@ -7,15 +7,16 @@ import styles from './Styles';
 export default class GroceryList extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {dataSource: []};
-        this.itemsRef = this.props.firebaseRef;
+        this.state = {dataSource: [], ids: []};
+        this.itemsRef = this.props.firebaseRef.child('items');
+        this.idRef = this.props.firebaseRef.child('id');
     }
 
     componentDidMount() {
-        this.listenForItems(this.itemsRef);
+        this.listenForItems(this.itemsRef, this.idRef);
     }
 
-    listenForItems(itemsRef) {
+    listenForItems(itemsRef, idRef) {
         try {
             itemsRef.on('value', (snap) => {
 
@@ -37,23 +38,16 @@ export default class GroceryList extends React.Component {
                 }
             });
 
+            idRef.on('value', (snap) => {
+                if (this.myRef && snap.val() && snap.val().uniqueId) {
+                    this.setState({ uniqueId: snap.val().uniqueId });
+                }
+            });
+
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    // User is signed in.
-                    let displayName = user.displayName;
-                    let email = user.email;
-                    let emailVerified = user.emailVerified;
-                    let photoURL = user.photoURL;
-                    let isAnonymous = user.isAnonymous;
-                    let uid = user.uid;
-                    let providerData = user.providerData;
-                    // ...
-                    console.log(user);
-                    //console.log(user.stsTokenManager.accessToken);
                     this.setState({loggedIn: true});
                 } else {
-                    // User is signed out.
-                    // ...
                     this.setState({loggedIn: false});
                 }
             });
@@ -72,9 +66,15 @@ export default class GroceryList extends React.Component {
     };
 
     addItem = () => {
+        let uniqueId = 21;
+        if (this.state.uniqueId) {
+            uniqueId = this.state.uniqueId;
+        }
+        this.idRef.child('uniqueId').set(uniqueId + 1);
+
         this.itemsRef.push({
             color: this.getRandomColor(),
-            id: this.state.dataSource.length + 1,
+            id: uniqueId,
             name: this.state.itemName && this.state.itemName.length ?
                 this.state.itemName : 'newName in ' + this.getRandomColor() })
         .then(() => {
@@ -113,7 +113,7 @@ export default class GroceryList extends React.Component {
                     <FlatList
                         ref={(list) => {this.flatList = list}}
                         data={this.state.dataSource}
-                        renderItem={({item}) => <GroceryItem itemData={item} handleDelete={this.deleteItem} />}
+                        renderItem={({item}) => <GroceryItem itemData={item} handleDelete={this.deleteItem} disableDelete={!this.state.loggedIn}/>}
                         keyExtractor={(item, index) => item._key}/>
                     :
                     <View style={styles.noItemWrapper}>
@@ -125,7 +125,7 @@ export default class GroceryList extends React.Component {
                                style={styles.textInput}
                                onChangeText={(text) => {this.setState({itemName: text})}}/>
                     <View style={styles.actionButton}>
-                        <Button onPress={this.addItem} title="add"/>
+                        <Button onPress={this.addItem} title="add" disabled={!this.state.loggedIn} />
                     </View>
                     <View style={styles.actionButton}>
                         <Button onPress={this.emptyList} title="empty" disabled={!this.state.loggedIn} />

@@ -9,7 +9,7 @@ export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {view: PROFILE_VIEW};
-        this.itemsRef = firebaseApp.database().ref().child('items');
+        this.ref = firebaseApp.database().ref();
 
         console.ignoredYellowBox = [
             'Setting a timer'
@@ -39,7 +39,7 @@ export default class App extends React.Component {
                 <View style={[styles.content]}>
                     {this.state.view === PROFILE_VIEW ?
                         <Profile /> :
-                        <GroceryList firebaseRef={this.itemsRef} />}
+                        <GroceryList firebaseRef={this.ref} />}
                 </View>
             </KeyboardAvoidingView>
         );

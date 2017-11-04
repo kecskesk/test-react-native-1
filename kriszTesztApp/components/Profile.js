@@ -12,11 +12,11 @@ export default class Profile extends React.Component {
     login = () => {
         if (this.state.username && this.state.password && this.myRef) {
             firebase.auth().signInWithEmailAndPassword(this.state.username, this.state.password).then(result => {
-                this.setState({result});
-                this.setState({error: null});
+                if (this.myRef) this.setState({result});
+                if (this.myRef) this.setState({error: null});
             }).catch((error) => {
-                this.setState({error});
-                this.setState({result: null});
+                if (this.myRef) this.setState({error});
+                if (this.myRef) this.setState({result: null});
             });
         }
     };
@@ -24,11 +24,11 @@ export default class Profile extends React.Component {
     register = () => {
         if (this.state.username && this.state.password && this.myRef) {
             firebase.auth().createUserWithEmailAndPassword(this.state.username, this.state.password).then(result => {
-                this.setState({result});
-                this.setState({error: null});
+                if (this.myRef) this.setState({result});
+                if (this.myRef) this.setState({error: null});
             }).catch((error) => {
-                this.setState({error});
-                this.setState({result: null});
+                if (this.myRef) this.setState({error});
+                if (this.myRef) this.setState({result: null});
             });
         }
     };

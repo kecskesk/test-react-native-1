@@ -10,8 +10,8 @@ export default class GroceryItem extends React.Component {
     render() {
         return (
             <View style={styles.row}>
-                <Button onPress={() => this.props.handleDelete(this.item._key)} title="del"/>
-                <Text style={[styles.cell, {color: this.item.color}]}>{this.item.id}</Text>
+                <Button onPress={() => this.props.handleDelete(this.item._key)} title="del" disabled={this.props.disableDelete} />
+                <Text style={[styles.cell, {color: this.item.color}]}>#{this.item.id}</Text>
                 <Text style={[styles.cell, {color: this.item.color}]}>{this.item.name}</Text>
                 <Text style={[styles.cell, {color: this.item.color}]}>{this.item._key}</Text>
             </View>
